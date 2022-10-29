@@ -1,6 +1,4 @@
-using Sandbox.UI;
-using Sandbox.UI.Construct;
-using Sandbox.UI.Tests;
+namespace SpawnMenu;
 
 [Library]
 public partial class WeaponList : Panel
@@ -33,17 +31,15 @@ public partial class WeaponList : Panel
 									//.Where( x => x.HasTag( "spawnable" ) )
 									.OrderBy( x => x.Title )
 									.ToArray();
+        foreach (var entry in ents)
+        {
+            Canvas.AddItem(entry);
+        }
 
-		foreach ( var entry in ents )
-		{
-			Canvas.AddItem( entry );
-		}
-
-		ents = TypeLibrary.GetDescriptions<BaseAmmo>()
+        ents = TypeLibrary.GetDescriptions<BaseAmmo>()
 									//.Where( x => x.HasTag( "spawnable" ) )
 									.OrderBy( x => x.Title )
 									.ToArray();
-
 		foreach ( var entry in ents )
 		{
 			Canvas.AddItem( entry );

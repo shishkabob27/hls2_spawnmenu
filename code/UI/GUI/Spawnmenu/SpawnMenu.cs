@@ -2,8 +2,10 @@
 global using System.Linq;
 global using System.Threading.Tasks;
 global using XeNPC;
-using Sandbox.UI;
-
+global using Sandbox.UI;
+global using Sandbox.UI.Tests;
+global using Sandbox.UI.Construct;
+namespace SpawnMenu;
 [Library]
 public partial class SpawnMenu : Panel
 {
@@ -66,6 +68,7 @@ partial class HLGame
 	[ConCmd.Client]
 	public static void create_spawnmenu()
 	{
+		
 		//if (Host.IsClient)
 		//{
 			Log.Info("Spawnmenu created");

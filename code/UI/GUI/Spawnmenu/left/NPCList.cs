@@ -1,7 +1,4 @@
-﻿
-using Sandbox.UI;
-using Sandbox.UI.Construct;
-using Sandbox.UI.Tests;
+﻿namespace SpawnMenu;
 
 [Library]
 public partial class NPCList : Panel

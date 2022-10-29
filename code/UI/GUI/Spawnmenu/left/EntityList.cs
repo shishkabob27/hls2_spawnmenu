@@ -1,6 +1,4 @@
-using Sandbox.UI;
-using Sandbox.UI.Construct;
-using Sandbox.UI.Tests;
+namespace SpawnMenu;
 
 [Library]
 public partial class EntityList : Panel
@@ -28,29 +26,25 @@ public partial class EntityList : Panel
 
 
 		//GARBAGE
-		var ents = TypeLibrary.GetDescriptions<Suit>()
-									.ToArray();
-		foreach ( var entry in ents )
-		{
-			Canvas.AddItem(  entry );
-		}
+		var ents = TypeLibrary.GetDescriptions<Suit>().ToArray();
+        foreach (var entry in ents)
+        {
+            Canvas.AddItem(entry);
+        }
 
-		ents = TypeLibrary.GetDescriptions<Battery>()
-									.ToArray();
-		foreach ( var entry in ents )
-		{
-			Canvas.AddItem(  entry );
-		}
+        ents = TypeLibrary.GetDescriptions<Battery>().ToArray();
+        foreach (var entry in ents)
+        {
+            Canvas.AddItem(entry);
+        }
 
-		ents = TypeLibrary.GetDescriptions<HealthKit>()
-									.ToArray();
-		foreach ( var entry in ents )
-		{
-			Canvas.AddItem(  entry );
-		}
+        ents = TypeLibrary.GetDescriptions<HealthKit>().ToArray();
+        foreach (var entry in ents)
+        {
+            Canvas.AddItem(entry);
+        }
 
-		ents = TypeLibrary.GetDescriptions<item_sodacan>()
-									.ToArray();
+        ents = TypeLibrary.GetDescriptions<item_sodacan>().ToArray();
 		foreach ( var entry in ents )
 		{
 			Canvas.AddItem(  entry );
