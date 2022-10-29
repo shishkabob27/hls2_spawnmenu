@@ -11,8 +11,8 @@ public partial class EntityList : Panel
 		AddChild( out Canvas, "canvas" );
 
 		Canvas.Layout.AutoColumns = true;
-		Canvas.Layout.ItemWidth = 128;
-		Canvas.Layout.ItemHeight = 128;
+		Canvas.Layout.ItemWidth = 64;
+		Canvas.Layout.ItemHeight = 64;
 		Canvas.OnCreateCell = ( cell, data ) =>
 		{
 			if ( data is TypeDescription type )

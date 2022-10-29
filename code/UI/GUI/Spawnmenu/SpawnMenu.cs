@@ -7,18 +7,24 @@ global using Sandbox.UI.Tests;
 global using Sandbox.UI.Construct;
 namespace SpawnMenu;
 [Library]
-public partial class SpawnMenu : Panel
+[UseTemplate("/resource/templates/SpawnMenu.html")]
+public partial class SpawnMenu : GUIPanel
 {
 	public static SpawnMenu Instance;
- 	public bool MenuOpen;
 
 	public SpawnMenu()
 	{
 		Instance = this;
 
-		StyleSheet.Load("/ui/spawnmenu.scss");
+		//StyleSheet.Load("/ui/spawnmenu.scss");
 
-        var left = Add.Panel( "left" );
+        Style.Left = 0;
+        Style.Right = 0;
+        Style.Top = 0;
+        Style.Bottom = 0;
+        Focus();
+
+        /*var left = Add.Panel( "left" );
 		{
 			var tabs = left.AddChild<ButtonGroup>();
 			tabs.AddClass( "tabs" );
@@ -38,21 +44,24 @@ public partial class SpawnMenu : Panel
 				var models = body.AddChild<CloudModelList>();
 				tabs.AddButtonActive( "asset.party", ( b ) => models.SetClass( "active", b ) );
 			}
-		};
+		};*/
 
 	}
 
-	public override void Tick()
-	{
-		base.Tick();
-		Parent.SetClass( "spawnmenuopen", MenuOpen );
-	}
-
-	[Event.BuildInput]
-    public void ProcessClientInput( InputBuilder input )
+    public override void Tick()
     {
-        if ( input.Pressed( InputButton.Grenade ) )
+        base.Tick();
+        Drag();
+        SetClass("active", MenuOpen);
+    }
+
+    [Event.BuildInput]
+    public void ProcessClientInput(InputBuilder input)
+    {
+        if (input.Pressed(InputButton.Grenade))
         {
+            Style.Left = (Screen.Width / 2) - (Box.Rect.Width / 2);
+            Style.Top = (Screen.Height / 2) - (Box.Rect.Height / 2);
             MenuOpen = !MenuOpen;
         }
     }
@@ -68,16 +77,12 @@ partial class HLGame
 	[ConCmd.Client]
 	public static void create_spawnmenu()
 	{
-		
-		//if (Host.IsClient)
-		//{
-			Log.Info("Spawnmenu created");
-            sphudpanel = new SMhudpanel();
-        //}
+		Log.Info("Spawnmenu created");
+        sphudpanel = new SMhudpanel();
     }
 }
 
-public class SMhudpanel : HudEntity<HudRootPanel>
+public class SMhudpanel : HudEntity<GUIRootPanel>
 {
     public static SMhudpanel Current;
 
