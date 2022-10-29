@@ -1,4 +1,4 @@
-namespace SpawnMenu;
+namespace SpawnMenuAddon;
 
 [Library]
 public partial class WeaponList : Panel

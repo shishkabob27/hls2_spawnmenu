@@ -5,7 +5,7 @@ global using XeNPC;
 global using Sandbox.UI;
 global using Sandbox.UI.Tests;
 global using Sandbox.UI.Construct;
-namespace SpawnMenu;
+namespace SpawnMenuAddon;
 
 [Library, UseTemplate("/resource/templates/SpawnMenu.html")]
 public partial class SpawnMenu : GUIPanel
