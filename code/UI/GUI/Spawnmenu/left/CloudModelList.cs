@@ -1,39 +1,37 @@
 ﻿namespace SpawnMenu;
 
-[Library, UseTemplate]
+[Library]
 public partial class CloudModelList : Panel
 {
-	public VirtualScrollPanel Canvas { get; set; }
+	VirtualScrollPanel Canvas;
 
 	public CloudModelList()
 	{
-	}
+        AddClass("spawnpage");
+        AddChild(out Canvas, "canvas");
 
-	protected override void PostTemplateApplied()
-	{
-		base.PostTemplateApplied();
+        Canvas.Layout.AutoColumns = true;
+        Canvas.Layout.ItemWidth = 96;
+        Canvas.Layout.ItemHeight = 96;
 
-		Canvas.Layout.AutoColumns = true;
-		Canvas.Layout.ItemWidth = 96;
-		Canvas.Layout.ItemHeight = 96;
+        Canvas.OnCreateCell = (cell, data) =>
+        {
+            var file = (Package)data;
+            var btn = cell.Add.Button(file.Title);
+            btn.AddClass("icon");
+            btn.AddEventListener("onclick", () => ConsoleSystem.Run("spawn", file.FullIdent));
+            btn.Style.BackgroundImage = Texture.Load(file.Thumb);
+        };
 
-		Canvas.OnCreateCell = ( cell, data ) =>
-		{
-			var file = (Package)data;
-			var panel = cell.Add.Panel( "icon" );
-			panel.AddEventListener( "onclick", () => ConsoleSystem.Run( "spawn", file.FullIdent ) );
-			panel.Style.BackgroundImage = Texture.Load( file.Thumb );
-		};
-
-		_ = UpdateItems();
-	}
+        _ = UpdateItems();
+    }
 
 	public async Task UpdateItems( int offset = 0 )
 	{
 		var q = new Package.Query();
 		q.Type = Package.Type.Model;
 		q.Order = Package.Order.Newest;
-		q.Take = 200;
+		q.Take = 1000;
 		q.Skip = offset;
 
 		var found = await q.RunAsync( default );
