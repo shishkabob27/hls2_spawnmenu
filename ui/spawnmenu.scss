@@ -24,17 +24,17 @@
 		flex-grow: 1;
 		flex-wrap: wrap;
 		justify-content: space-between;
-		padding: 16px;
+		padding: 8px;
 
 		.cell
 		{
-			padding: 2px;
+			padding: 4px;
 		}
 
 		.icon
 		{
 			color: rgba( #fff, 0.8 );
-			font-size: 12px;
+			font-size: 8px;
 			text-align: center;
 			cursor: pointer;
 			width: 100%;
@@ -47,7 +47,7 @@
 			label
 			{
 				bottom: 2px;
-				font-size: 14px;
+				font-size: 12px;
 				position: absolute;
 				pointer-events: none;
 			}
@@ -58,19 +58,5 @@
 				background-color: rgba(black, 0.1);
 			}
 		}
-	}
-}
-
-
-spawnmenu .sidebar
-{
-	//flex-direction: column;
-	width: 28px;
-	padding: 8px;
-
-	button
-	{
-		cursor: pointer;
-		color: white;
 	}
 }
