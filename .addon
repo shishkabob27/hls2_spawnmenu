@@ -1,0 +1,25 @@
+{
+  "Title": "Sandbox Spawnmenu",
+  "Type": "addon",
+  "Org": "shishkabob",
+  "Ident": "hls2_spawnmenu",
+  "Tags": "",
+  "Schema": 1,
+  "HasAssets": true,
+  "AssetsPath": "",
+  "ResourcePaths": [
+    "/ui/*",
+    "/resource/*"
+  ],
+  "HasCode": true,
+  "CodePath": "/code/",
+  "RootNamespace": null,
+  "Metadata": {
+    "ParentPackage": "shishkabob.hls2",
+    "Compiler": {
+      "RootNamespace": "hls2",
+      "DefineConstants": "SANDBOX;ADDON;DEBUG",
+      "NoWarn": "1701;1702;1591;"
+    }
+  }
+}
