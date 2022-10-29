@@ -11,8 +11,8 @@ public partial class NPCList : Panel
 		AddChild( out Canvas, "canvas" );
 
 		Canvas.Layout.AutoColumns = true;
-		Canvas.Layout.ItemWidth = 64;
-		Canvas.Layout.ItemHeight = 64;
+		Canvas.Layout.ItemWidth = 96;
+		Canvas.Layout.ItemHeight = 96;
 		Canvas.OnCreateCell = ( cell, data ) =>
 		{
 			if ( data is TypeDescription type )
