@@ -6,6 +6,7 @@ global using Sandbox.UI;
 global using Sandbox.UI.Tests;
 global using Sandbox.UI.Construct;
 namespace SpawnMenu;
+
 [Library, UseTemplate("/resource/templates/SpawnMenu.html")]
 public partial class SpawnMenu : GUIPanel
 {
