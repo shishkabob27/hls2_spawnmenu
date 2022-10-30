@@ -1,10 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 namespace SpawnMenuAddon;
 
 [Library]
 public partial class WeaponList : Panel
 {
 	VirtualScrollPanel Canvas;
-
 	public WeaponList()
 	{
 		AddClass( "spawnpage" );
@@ -25,25 +27,34 @@ public partial class WeaponList : Panel
 		};
 
 
-		//GARBAGE
 
-		var ents = TypeLibrary.GetDescriptions<Weapon>()
-									//.Where( x => x.HasTag( "spawnable" ) )
-									.OrderBy( x => x.Title )
-									.ToArray();
-        foreach (var entry in ents)
-        {
-            Canvas.AddItem(entry);
-        }
+    }
+	string[] HL1Weapons = new string[] { "weapon_crowbar", "weapon_9mmhandgun", "weapon_357", "weapon_mp5", "weapon_shotgun", "weapon_crossbow", "weapon_rpg", "weapon_gauss", "weapon_egon", "weapon_hornet","weapon_handgrenade","weapon_tripmine","weapon_satchel","weapon_snark" };
+    string prevtab;
+    [Event.Tick]
+	void update()
+	{
+		if ( prevtab == SpawnMenu.Current.SelectedTab ) return;
+		prevtab = SpawnMenu.Current.SelectedTab;
+		
+        Canvas.Clear();
+        //GARBAGE
 
-        ents = TypeLibrary.GetDescriptions<BaseAmmo>()
-									//.Where( x => x.HasTag( "spawnable" ) )
-									.OrderBy( x => x.Title )
-									.ToArray();
-		foreach ( var entry in ents )
+        var ents = TypeLibrary.GetDescriptions<Weapon>()
+                                    //.Where( x => x.HasTag( "spawnable" ) )
+                                    .OrderBy( x => x.Title )
+                                    .ToList();
+		if ( SpawnMenu.Current.SelectedTab == "other" )
 		{
-			Canvas.AddItem( entry );
-		}
-	}
+			ents.RemoveAll( x => HL1Weapons.Any( x.ClassName.Contains ) );
+		} else
+		{
 
+            ents.RemoveAll( x => !HL1Weapons.Any( x.ClassName.Contains ) );
+        }
+        foreach ( var entry in ents )
+        {
+            Canvas.AddItem( entry );
+        }
+    }
 }

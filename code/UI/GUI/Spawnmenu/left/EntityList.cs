@@ -26,30 +26,57 @@ public partial class EntityList : Panel
 
 
 		//GARBAGE
-		var ents = TypeLibrary.GetDescriptions<Suit>().ToArray();
-        foreach (var entry in ents)
-        {
-            Canvas.AddItem(entry);
-        }
-
-        ents = TypeLibrary.GetDescriptions<Battery>().ToArray();
-        foreach (var entry in ents)
-        {
-            Canvas.AddItem(entry);
-        }
-
-        ents = TypeLibrary.GetDescriptions<HealthKit>().ToArray();
-        foreach (var entry in ents)
-        {
-            Canvas.AddItem(entry);
-        }
-
-        ents = TypeLibrary.GetDescriptions<item_sodacan>().ToArray();
-		foreach ( var entry in ents )
-		{
-			Canvas.AddItem(  entry );
-		}
 
 	}
+
+    string prevtab;
+    [Event.Tick.Client]
+    void update()
+    {
+        if ( prevtab == SpawnMenu.Current.SelectedTab ) return;
+        prevtab = SpawnMenu.Current.SelectedTab;
+        var tab = SpawnMenu.Current.SelectedTab;
+
+        Canvas.Clear();
+        //GARBAGE
+        if (tab == "ammo")
+        {
+
+            var ents = TypeLibrary.GetDescriptions<BaseAmmo>()
+                                        //.Where( x => x.HasTag( "spawnable" ) )
+                                        .OrderBy( x => x.Title )
+                                        .ToArray();
+            foreach ( var entry in ents )
+            {
+                Canvas.AddItem( entry );
+            }
+        } else if (tab == "items")
+        {
+
+            var ents = TypeLibrary.GetDescriptions<Suit>().ToArray();
+            foreach ( var entry in ents )
+            {
+                Canvas.AddItem( entry );
+            }
+
+            ents = TypeLibrary.GetDescriptions<Battery>().ToArray();
+            foreach ( var entry in ents )
+            {
+                Canvas.AddItem( entry );
+            }
+
+            ents = TypeLibrary.GetDescriptions<HealthKit>().ToArray();
+            foreach ( var entry in ents )
+            {
+                Canvas.AddItem( entry );
+            }
+
+            ents = TypeLibrary.GetDescriptions<item_sodacan>().ToArray();
+            foreach ( var entry in ents )
+            {
+                Canvas.AddItem( entry );
+            }
+        }
+    }
 
 }

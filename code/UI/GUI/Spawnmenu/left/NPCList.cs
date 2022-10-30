@@ -1,4 +1,5 @@
-﻿namespace SpawnMenuAddon;
+﻿using Sandbox;
+namespace SpawnMenuAddon;
 
 [Library]
 public partial class NPCList : Panel
