@@ -20,9 +20,19 @@ public partial class NPCList : Panel
 			{
 				var btn = cell.Add.Button( type.Title );
 				btn.AddClass( "icon" );
-				btn.AddEventListener( "onclick", () => ConsoleSystem.Run( "ent_create", type.ClassName ) );
-				btn.Style.BackgroundImage = Texture.Load( FileSystem.Mounted, $"/ui/spawnmenu/{type.ClassName}.png", false );
-			}
+				btn.AddEventListener( "onclick", () => ConsoleSystem.Run( "ent_create", type.ClassName ) ); 
+				var t = Texture.Load( FileSystem.Mounted, $"/ui/spawnmenu/{type.ClassName}.png", false );
+                if ( t == null || t.IsPromise || SpawnMenu.AlwaysUseRenderedIcons )
+                {
+                    btn.Style.BackgroundImage = SpawnMenu.MakeIcon( type );
+                }
+                else
+                {
+                    btn.Style.BackgroundImage = t;
+                    btn.Style.BackgroundPositionX = Length.Auto;
+                    btn.Style.BackgroundPositionY = Length.Auto;
+                }
+            }
 		};
 
 

@@ -5,6 +5,8 @@ global using XeNPC;
 global using Sandbox.UI;
 global using Sandbox.UI.Tests;
 global using Sandbox.UI.Construct;
+using System;
+
 namespace SpawnMenuAddon
 {
 
@@ -60,6 +62,47 @@ namespace SpawnMenuAddon
                 Style.Top = ( Screen.Height / 2 ) - ( Box.Rect.Height / 2 );
                 MenuOpen = !MenuOpen;
             }
+        }
+
+        public static bool AlwaysUseRenderedIcons = true;
+        public static Texture MakeIcon(TypeDescription type)
+        {
+            var ImgWidth = 96;
+            var ImgHeight = 96;
+            var ImgScalar = 3f;
+
+            if ( type == null ) return default;
+            var b = type.Create<ModelEntity>();
+            b.Position = new Vector3( 999999, 999999, 999999 );
+
+            b.EnableDrawing = false;
+            b.EnableAllCollisions = false;
+            b.Transmit = TransmitType.Never;
+            if ( b.Model == null ) return default;
+            var txt = Texture.CreateRenderTarget().WithHeight( ImgHeight ).WithWidth( ImgWidth );
+            var txt2 = txt.Create();
+            var scn = new SceneCamera();
+            scn.AntiAliasing = true;
+            scn.World = new SceneWorld();
+            scn.FieldOfView = 10;
+            var trn = new Transform( new Vector3( 0, 0, 0 ), Rotation.From( 0, 0, 0 ) );
+            var boundmax = b.Model.Bounds.Size.Length;
+            var dist = ( boundmax / ImgScalar ) / MathF.Tan( MathX.DegreeToRadian( scn.FieldOfView ) / 2 );//8 * MathF.Sqrt(b.Model.Bounds.Size.Length);
+                                                                                                           // Ideal distance  our camera should be to fit our object full on screen
+            var scnobj = new SceneObject( scn.World, b.Model, trn );
+            var box = ( scnobj.Bounds.Mins + scnobj.Bounds.Maxs ) / 2;
+            scn.Position = new Vector3( 1, 1, 0.9f ) * dist;
+            scn.Rotation = Rotation.LookAt( -1 * ( scn.Position - box ).Normal );//Rotation.From(30,0,0);
+            var scnlight = new SceneLight( scn.World, new Vector3( 32, 128, 128 ), 1024, Color.White );
+            scnlight.LightColor = Color.White.Lighten( 2 );
+            scnlight.ShadowsEnabled = true;
+            scn.AmbientLightColor = Color.FromBytes( 180, 240, 255 ).Darken( 0.5f );
+            Graphics.RenderToTexture( scn, txt2 );
+
+            b.Delete();
+            scnobj.Delete();
+            scn.World.Delete();
+            return txt2;
         }
     }
 }
