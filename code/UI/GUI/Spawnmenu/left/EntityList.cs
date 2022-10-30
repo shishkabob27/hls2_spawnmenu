@@ -96,28 +96,25 @@ public partial class EntityList : Panel
                                         //.Where( x => x.HasTag( "spawnable" ) )
                                         .OrderBy( x => x.Title )
                                         .ToList();
-            ents.RemoveAll( x => x.TargetType.IsSubclassOf( typeof( BrushEntity ) ));
-            ents.RemoveAll( x => x.TargetType.IsSubclassOf( typeof( BaseGamemodeStub ) ));
-            ents.RemoveAll( x => x.TargetType.IsSubclassOf( typeof( BaseTrigger ) ));
-            ents.RemoveAll( x => x.TargetType.IsSubclassOf( typeof( Water ) ));
-            ents.RemoveAll( x => x.TargetType.IsSubclassOf( typeof( WorldEntity ) ));
-            ents.RemoveAll( x => x.TargetType.IsSubclassOf( typeof( DoorEntity ) ));
-            ents.RemoveAll( x => x.TargetType.IsSubclassOf( typeof( DoorRotatingEntity ) ));
-            ents.RemoveAll( x => x.TargetType.IsSubclassOf( typeof( PhysicsBrushEntity ) ));
-            ents.RemoveAll( x => x.TargetType.IsSubclassOf( typeof( ButtonEntity ) ));
-            ents.RemoveAll( x => x.TargetType.IsSubclassOf( typeof( ButtonEntityRot ) ));
 
+            System.Type[] a = { 
+                typeof( BrushEntity ), 
+                typeof( BaseGamemodeStub ), 
+                typeof( BaseTrigger ), 
+                typeof( Water ), 
+                typeof( WorldEntity ), 
+                typeof( DoorEntity ), 
+                typeof( DoorRotatingEntity ), 
+                typeof( PhysicsBrushEntity ), 
+                typeof( ButtonEntity ), 
+                typeof( ButtonEntityRot ) 
+            };
 
-            ents.RemoveAll( x => x.TargetType == ( typeof( BrushEntity ) ) );
-            ents.RemoveAll( x => x.TargetType == ( typeof( BaseGamemodeStub ) ) );
-            ents.RemoveAll( x => x.TargetType == ( typeof( BaseTrigger ) ) );
-            ents.RemoveAll( x => x.TargetType == ( typeof( Water ) ) );
-            ents.RemoveAll( x => x.TargetType == ( typeof( WorldEntity ) ) );
-            ents.RemoveAll( x => x.TargetType == ( typeof( DoorEntity ) ) );
-            ents.RemoveAll( x => x.TargetType == ( typeof( DoorRotatingEntity ) ) );
-            ents.RemoveAll( x => x.TargetType == ( typeof( PhysicsBrushEntity ) ) );
-            ents.RemoveAll( x => x.TargetType == ( typeof( ButtonEntity ) ) );
-            ents.RemoveAll( x => x.TargetType == ( typeof( ButtonEntityRot ) ) );
+            foreach (System.Type type in a) {
+
+                ents.RemoveAll( x => x.TargetType.IsSubclassOf( type ) );
+                ents.RemoveAll( x => x.TargetType == type );
+            }
 
             ents.RemoveAll( x => x.Name.Contains("stub") );
             ents.RemoveAll( x => x.Name.Contains("stub") );
