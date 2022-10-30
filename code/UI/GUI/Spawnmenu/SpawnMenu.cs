@@ -30,7 +30,7 @@ namespace SpawnMenuAddon
             Style.Bottom = 0;
             Focus();
         }
-
+        bool oldm = false;
         public override void Tick()
         {
             base.Tick();
@@ -50,7 +50,16 @@ namespace SpawnMenuAddon
                 default:
                     break;
             }
-//            SelectedTab =
+            if ( MenuOpen )
+            {
+                if ( oldm != MenuOpen && Box.Rect.Width != 0 )
+                {
+                    oldm = MenuOpen;
+                    Position.x = ( Screen.Width / 2 ) - ( Box.Rect.Width / 2 );
+                    Position.y = ( Screen.Height / 2 ) - ( Box.Rect.Height / 2 );
+                } 
+            }
+            //            SelectedTab =
         }
 
         [Event.BuildInput]
@@ -74,7 +83,7 @@ namespace SpawnMenuAddon
             if ( type == null ) return default;
             var b = type.Create<ModelEntity>();
             if ( b == null ) return default;
-            b.Position = new Vector3( 999999, 999999, 999999 );
+            b.Position = new Vector3( 9999999, 9999999, 9999999 );
 
             b.EnableDrawing = false;
             b.EnableAllCollisions = false;
