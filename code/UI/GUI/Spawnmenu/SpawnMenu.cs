@@ -5,7 +5,7 @@ global using XeNPC;
 global using Sandbox.UI;
 global using Sandbox.UI.Tests;
 global using Sandbox.UI.Construct;
-namespace SpawnMenuAddon;
+namespace SpawnMenuAddon { 
 
 [Library, UseTemplate("/resource/templates/SpawnMenu.html")]
 public partial class SpawnMenu : GUIPanel
@@ -37,16 +37,35 @@ public partial class SpawnMenu : GUIPanel
         }
     }
 }
-
-partial class HLGame
+}
+partial class GAMER
 {
 	static SMhudpanel sphudpanel { get; set; }
 
-	[ConCmd.Client]
-	public static void create_spawnmenu()
+    [Event.BuildInput]
+    public static void InputB( InputBuilder input )
+    {
+        if ( input.Pressed( InputButton.Grenade ) )
+        {
+            ConsoleSystem.Run( "openspawnmenu" );
+        }
+    }
+    [ConCmd.Client]
+	public static void openspawnmenu(  )
 	{
-		Log.Info("Spawnmenu created");
-        sphudpanel = new SMhudpanel();
+        if (GUIRootPanel.Current.ChildrenOfType<SpawnMenuAddon.SpawnMenu>().Count() > 0 )
+        {
+            Log.Info( "Spawnmenu removed" );
+            foreach ( var i in GUIRootPanel.Current.ChildrenOfType<SpawnMenuAddon.SpawnMenu>())
+            {
+                i.Delete();
+            }
+        } else
+        {
+            Log.Info( "Spawnmenu created" );
+            var a = GUIRootPanel.Current.AddChild<SpawnMenuAddon.SpawnMenu>();
+            a.MenuOpen = true;
+        }
     }
 }
 
@@ -54,6 +73,6 @@ public class SMhudpanel : HudEntity<GUIRootPanel>
 {
     public SMhudpanel()
     {
-            RootPanel.AddChild<SpawnMenu>();
+            RootPanel.AddChild<SpawnMenuAddon.SpawnMenu>();
     }
 }
