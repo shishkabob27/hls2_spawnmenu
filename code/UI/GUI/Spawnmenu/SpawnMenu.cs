@@ -73,6 +73,7 @@ namespace SpawnMenuAddon
 
             if ( type == null ) return default;
             var b = type.Create<ModelEntity>();
+            if ( b == null ) return default;
             b.Position = new Vector3( 999999, 999999, 999999 );
 
             b.EnableDrawing = false;

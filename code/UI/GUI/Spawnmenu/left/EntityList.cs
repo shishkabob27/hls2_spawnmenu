@@ -49,7 +49,7 @@ public partial class EntityList : Panel
 
         Canvas.Clear();
         //GARBAGE
-        if (tab == "ammo")
+        if ( tab == "ammo" )
         {
 
             var ents = TypeLibrary.GetDescriptions<BaseAmmo>()
@@ -60,7 +60,8 @@ public partial class EntityList : Panel
             {
                 Canvas.AddItem( entry );
             }
-        } else if (tab == "items")
+        }
+        else if ( tab == "items" )
         {
 
             var ents = TypeLibrary.GetDescriptions<Suit>().ToArray();
@@ -82,6 +83,19 @@ public partial class EntityList : Panel
             }
 
             ents = TypeLibrary.GetDescriptions<item_sodacan>().ToArray();
+            foreach ( var entry in ents )
+            {
+                Canvas.AddItem( entry );
+            }
+        }
+        else if ( tab == "all" )
+        {
+            var ents = TypeLibrary.GetDescriptions<Entity>()
+                                        //.Where( x => x.HasTag( "spawnable" ) )
+                                        .OrderBy( x => x.Title )
+                                        .ToList();
+            ents.RemoveAll( x => x.Name.Contains("stub") );
+            ents.RemoveAll( x => x.Name.Contains("stub") );
             foreach ( var entry in ents )
             {
                 Canvas.AddItem( entry );
