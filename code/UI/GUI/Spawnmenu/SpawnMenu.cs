@@ -15,7 +15,7 @@ namespace SpawnMenuAddon
     public class SpawnMenu : GUIPanel
     {
         public static SpawnMenu Current;
-        public string SelectedTab;
+        public string SelectedTab = "";
         public TabContainer MainSelector { get; set; }
         public TabContainer ModelSelector { get; set; }
         public TabContainer WeaponSelector { get; set; }
@@ -48,6 +48,7 @@ namespace SpawnMenuAddon
                     SelectedTab = EntitySelector.ActiveTab;
                     break;
                 default:
+                    SelectedTab = "";
                     break;
             }
             if ( MenuOpen )
