@@ -87,9 +87,8 @@ public partial class CloudModelList : Panel
 		var found = await q.RunAsync( default );
 		var foundNew = found.ToList();
 		if ( SpawnMenu.Current.TypeSelector.ActiveTab == "addon" && !SpawnMenu.Current.ShowIncompatible)
-		{
-            foundNew.RemoveAll( x => x.GetMeta<string>( "ParentPackage" ) != Global.GameIdent );
-
+        {
+			foundNew.RemoveAll( x => !( x.GetMeta<string>( "ParentPackage" ) == "shishkabob.hls2" || x.Tags.Contains("game:any") ) ) ; 
         }
 		Canvas.SetItems( foundNew );
 
@@ -103,8 +102,7 @@ public partial class CloudModelList : Panel
             var foundNew2 = found2.ToList();
             if ( SpawnMenu.Current.TypeSelector.ActiveTab == "addon" && !SpawnMenu.Current.ShowIncompatible )
             {
-                foundNew2.RemoveAll( x => x.GetMeta<string>( "ParentPackage" ) != Global.GameIdent );
-
+                foundNew2.RemoveAll( x => !( x.GetMeta<string>( "ParentPackage" ) == "shishkabob.hls2" || x.Tags.Contains( "game:any" ) ) );
             }
             Canvas.AddItems( foundNew2.ToArray() );
         }
@@ -178,10 +176,11 @@ public partial class CloudModelList : Panel
         Log.Info( $"Loading addon {asset}" );  
         return asset;
 
-    }	static async Task<string> SpawnPackageGeneric( string packageName, Entity source )
+    }	
+	static async Task<string> SpawnPackageGeneric( string packageName, Entity source )
 	{
 		var package = await Package.Fetch( packageName, false );
-		if ( package == null || package.PackageType != Package.Type.Addon || package.Revision == null )
+		if ( package == null || package.Revision == null )
 		{
 			// spawn error particles
 			return null;
