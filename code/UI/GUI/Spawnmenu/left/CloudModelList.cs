@@ -43,8 +43,7 @@ public partial class CloudModelList : Panel
 	{
 		var q = new Package.Query();
 		q.Type = Package.Type.Model;
-
-        if ( SpawnMenu.Current.MainSelector.ActiveTab != "assetparty" ) return;
+		 
         switch ( SpawnMenu.Current.TypeSelector.ActiveTab )
         {
             case "model":
