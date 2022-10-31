@@ -102,7 +102,7 @@ namespace SpawnMenuAddon
                 }
             }
         }
-        public static bool AlwaysUseRenderedIcons = true;
+        public static bool AlwaysUseRenderedIcons = false;
         public static Texture MakeIcon(TypeDescription type)
         {
             var ImgWidth = 96;
