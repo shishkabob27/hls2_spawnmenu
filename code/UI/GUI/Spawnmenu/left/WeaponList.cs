@@ -44,30 +44,35 @@ public partial class WeaponList : Panel
 	string[] HL1Weapons = new string[] { "weapon_crowbar", "weapon_9mmhandgun", "weapon_357", "weapon_mp5", "weapon_shotgun", "weapon_crossbow", "weapon_rpg", "weapon_gauss", "weapon_egon", "weapon_hornet","weapon_handgrenade","weapon_tripmine","weapon_satchel","weapon_snark" };
     string prevtab;
     [Event.Tick]
-	void update()
-	{
-		if ( prevtab == SpawnMenu.Current.SelectedTab ) return;
-		prevtab = SpawnMenu.Current.SelectedTab;
-		
+    void update()
+    {
+        if ( prevtab == SpawnMenu.Current.SelectedTab ) return;
+        prevtab = SpawnMenu.Current.SelectedTab;
+        if ( SpawnMenu.Current.MainSelector.ActiveTab != "weapons" ) return;
+
         Canvas.Clear();
         //GARBAGE
 
-        var ents = TypeLibrary.GetDescriptions<Weapon>()
-                                    //.Where( x => x.HasTag( "spawnable" ) )
-                                    .OrderBy( x => x.Title )
-                                    .ToList();
-		if ( SpawnMenu.Current.SelectedTab == "other" )
-		{
-			ents.RemoveAll( x => HL1Weapons.Any( x.ClassName.Contains ) );
-		} else
-		{
 
-            ents.RemoveAll( x => !HL1Weapons.Any( x.ClassName.Contains ) );
-        }
+
+        var ents = TypeLibrary.GetDescriptions<Weapon>()
+                                    .OrderBy( x => x.Title )
+                                    .ToArray();
+
         foreach ( var entry in ents )
         {
-            Canvas.AddItem( entry );
+            string a = "Other";
+            try
+            {
+                a = (string)entry.GetAttribute<MenuCategory>().Value;
+            }
+            catch { }
+            SpawnMenu.CheckCategory( a );
+            if ( a == SpawnMenu.Current.SelectedTab )
+            {
+                Canvas.AddItem( entry );
+            }
+
         }
     }
-
-}
+} 

@@ -6,6 +6,7 @@ global using Sandbox.UI;
 global using Sandbox.UI.Tests;
 global using Sandbox.UI.Construct;
 using System;
+using static Sandbox.UI.TabContainer;
 
 namespace SpawnMenuAddon
 {
@@ -16,6 +17,7 @@ namespace SpawnMenuAddon
     {
         public static SpawnMenu Current;
         public string SelectedTab = "";
+        public TabContainer CurrentTab;
         public TabContainer MainSelector { get; set; }
         public TabContainer ModelSelector { get; set; }
         public TabContainer WeaponSelector { get; set; }
@@ -33,24 +35,36 @@ namespace SpawnMenuAddon
         bool oldm = false;
         public override void Tick()
         {
-            base.Tick();
-            Drag();
-            SetClass( "active", MenuOpen );
+
+
+            SelectedTab = "";
             switch ( MainSelector.ActiveTab )
             {
                 case "models":
-                    SelectedTab = ModelSelector.ActiveTab;
+                    try { SelectedTab = ModelSelector.Tabs.Where( x => x.Active ).First().Button.Text; } catch { }
+                    CurrentTab = ModelSelector;
                     break;
                 case "weapons":
-                    SelectedTab = WeaponSelector.ActiveTab;
+                    try { SelectedTab = WeaponSelector.Tabs.Where( x => x.Active ).First().Button.Text; } catch { }
+                    CurrentTab = WeaponSelector;
                     break;
                 case "entities":
-                    SelectedTab = EntitySelector.ActiveTab;
+                    try { SelectedTab = EntitySelector.Tabs.Where( x => x.Active ).First().Button.Text;} catch { }
+                    CurrentTab = EntitySelector;
+                    break;
+                case "npcs":
+                    try { SelectedTab = NPCSelector.Tabs.Where( x => x.Active ).First().Button.Text; } catch { }
+                    CurrentTab = NPCSelector;
                     break;
                 default:
+                    CurrentTab = ModelSelector;
                     SelectedTab = "";
                     break;
             }
+            base.Tick();
+            Current.CurrentTab.Children.First().SortChildren<Button>( x => x.Text.First() ); 
+            Drag();
+            SetClass( "active", MenuOpen );
             if ( MenuOpen )
             {
                 if ( oldm != MenuOpen && Box.Rect.Width != 0 )
@@ -73,7 +87,21 @@ namespace SpawnMenuAddon
                 MenuOpen = !MenuOpen;
             }
         }
-
+        public static void CheckCategory(string cate)
+        {
+            bool shouldSelect = false;
+            if ( Current.CurrentTab.Tabs.Count() == 0 ) shouldSelect = true;
+            if ( Current.CurrentTab.Tabs.Where( x => x.Button.Text == cate ).Count() == 0 )
+            {
+                var a = new Tab( Current.CurrentTab, cate,"",new Panel());
+                a.Button.Text = cate;
+                Current.CurrentTab.Tabs.Add( a );
+                if (shouldSelect)
+                {
+                    a.Active = true;
+                }
+            }
+        }
         public static bool AlwaysUseRenderedIcons = true;
         public static Texture MakeIcon(TypeDescription type)
         {

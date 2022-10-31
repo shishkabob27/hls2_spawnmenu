@@ -34,17 +34,38 @@ public partial class NPCList : Panel
                 }
             }
 		};
-
-
-		var ents = TypeLibrary.GetDescriptions<NPC>()
-									//.Where( x => x.HasTag( "spawnable" ) )
-									.OrderBy( x => x.Title )
-									.ToArray();
-
-		foreach ( var entry in ents )
-		{
-			Canvas.AddItem( entry );
-		}
 	}
+	string prevtab;
+	[Event.Tick]
+	void update()
+	{
+		if ( prevtab == SpawnMenu.Current.SelectedTab ) return;
+		prevtab = SpawnMenu.Current.SelectedTab;
+        if ( SpawnMenu.Current.MainSelector.ActiveTab != "npcs" ) return;
 
+		Canvas.Clear();
+        //GARBAGE
+
+
+
+        var ents = TypeLibrary.GetDescriptions<NPC>()
+                                    .OrderBy( x => x.Title )
+                                    .ToArray();
+
+        foreach ( var entry in ents )
+        {
+            string a = "Other";
+            try
+            {
+                a = (string)entry.GetAttribute<MenuCategory>().Value;
+            }
+            catch { }
+            SpawnMenu.CheckCategory( a );
+            if ( a == SpawnMenu.Current.SelectedTab )
+            {
+                Canvas.AddItem( entry );
+            }
+
+        }
+    }
 }

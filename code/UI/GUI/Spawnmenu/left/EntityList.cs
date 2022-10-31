@@ -47,11 +47,63 @@ public partial class EntityList : Panel
     {
         if ( prevtab == SpawnMenu.Current.SelectedTab ) return;
         prevtab = SpawnMenu.Current.SelectedTab;
+        if ( SpawnMenu.Current.MainSelector.ActiveTab != "entities" ) return;
+
+        Canvas.Clear();
+        //GARBAGE
+
+
+
+        var ents = TypeLibrary.GetDescriptions<Entity>()
+                                    .OrderBy( x => x.Title )
+                                    .ToList();
+        System.Type[] b = {
+                typeof( BrushEntity ),
+                typeof( BaseGamemodeStub ),
+                typeof( BaseTrigger ),
+                typeof( Water ),
+                typeof( WorldEntity ),
+                typeof( DoorEntity ),
+                typeof( DoorRotatingEntity ),
+                typeof( PhysicsBrushEntity ),
+                typeof( ButtonEntity ),
+                typeof( ButtonEntityRot ),
+                typeof( Weapon ),
+                typeof( NPC )
+            };
+
+        foreach ( System.Type type in b )
+        {
+
+            ents.RemoveAll( x => x.TargetType.IsAssignableTo( type ) );
+        }
+
+        foreach ( var entry in ents )
+        {
+            string a = "Other";
+            try
+            {
+                a = (string)entry.GetAttribute<MenuCategory>().Value;
+            }
+            catch { }
+            SpawnMenu.CheckCategory( a );
+            if ( a == SpawnMenu.Current.SelectedTab )
+            {
+                Canvas.AddItem( entry );
+            }
+
+        }
+    }
+    void update2()
+    {
+        if ( prevtab == SpawnMenu.Current.SelectedTab ) return;
+        prevtab = SpawnMenu.Current.SelectedTab;
+        if ( SpawnMenu.Current.MainSelector.ActiveTab != "entities" ) return;
         var tab = SpawnMenu.Current.SelectedTab;
 
         Canvas.Clear();
         //GARBAGE
-        if ( tab == "ammo" )
+        if ( tab == "Ammo" )
         {
 
             var ents = TypeLibrary.GetDescriptions<BaseAmmo>()
@@ -63,7 +115,7 @@ public partial class EntityList : Panel
                 Canvas.AddItem( entry );
             }
         }
-        else if ( tab == "items" )
+        else if ( tab == "Items" )
         {
 
             var ents = TypeLibrary.GetDescriptions<Suit>().ToArray();
@@ -90,7 +142,7 @@ public partial class EntityList : Panel
                 Canvas.AddItem( entry );
             }
         }
-        else if ( tab == "all" )
+        else if ( tab == "All" )
         {
             var ents = TypeLibrary.GetDescriptions<Entity>()
                                         //.Where( x => x.HasTag( "spawnable" ) )
@@ -112,10 +164,8 @@ public partial class EntityList : Panel
 
             foreach (System.Type type in a) {
 
-                ents.RemoveAll( x => x.TargetType.IsSubclassOf( type ) );
-                ents.RemoveAll( x => x.TargetType == type );
+                ents.RemoveAll( x => x.TargetType.IsAssignableTo( type ) );
             }
-
             ents.RemoveAll( x => x.Name.Contains("stub") );
             ents.RemoveAll( x => x.Name.Contains("stub") );
             foreach ( var entry in ents )
