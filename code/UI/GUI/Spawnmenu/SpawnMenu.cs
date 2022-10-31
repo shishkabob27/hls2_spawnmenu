@@ -18,12 +18,15 @@ namespace SpawnMenuAddon
     {
         public static SpawnMenu Current;
         public string SelectedTab = "";
+        public string SearchQuery = "";
         public TabContainer CurrentTab;
+        public TextEntry SearchBar { get; set; }
         public TabContainer MainSelector { get; set; }
         public TabContainer ModelSelector { get; set; }
         public TabContainer WeaponSelector { get; set; }
         public TabContainer EntitySelector { get; set; }
         public TabContainer NPCSelector { get; set; }
+        public TabContainer CloudSelector { get; set; }
         public SpawnMenu()
         {
             Current = this;
@@ -56,6 +59,11 @@ namespace SpawnMenuAddon
                 case "npcs":
                     try { SelectedTab = NPCSelector.Tabs.Where( x => x.Active ).First().Button.Text; } catch { }
                     CurrentTab = NPCSelector;
+                    break;
+                case "assetparty":
+                    try { SelectedTab = CloudSelector.Tabs.Where( x => x.Active ).First().Button.Text; } catch { }
+                    CurrentTab = CloudSelector ;
+                    SearchQuery = SearchBar.Text;
                     break;
                 default:
                     CurrentTab = ModelSelector;

@@ -25,20 +25,55 @@ public partial class CloudModelList : Panel
 
         _ = UpdateItems();
     }
+	string prevSearch = "";
+    string prevtab;
+    public override void Tick()
+	{
+		if ( prevSearch == SpawnMenu.Current.SearchQuery && prevtab == SpawnMenu.Current.SelectedTab ) return;
+		prevSearch = SpawnMenu.Current.SearchQuery;
+		prevtab = SpawnMenu.Current.SelectedTab;
 
+        RefreshItems();
+	} 
 	public async Task UpdateItems( int offset = 0 )
 	{
 		var q = new Package.Query();
 		q.Type = Package.Type.Model;
 		q.Order = Package.Order.Newest;
-		q.Take = 1000;
+		switch(prevtab)
+		{
+			case "Most Recent":
+                q.Order = Package.Order.Newest;
+				break;
+			case "Most Popular":
+                q.Order = Package.Order.Popular;
+				break;
+			case "Most Downloads":
+                q.Order = Package.Order.Live;
+				break;
+			case "Trending":
+                q.Order = Package.Order.Trending;
+				break;
+        }
+		q.Take = 200;
 		q.Skip = offset;
+		q.SearchText = SpawnMenu.Current.SearchQuery;
 
 		var found = await q.RunAsync( default );
 		Canvas.SetItems( found );
 
-		// TODO - auto add more items here
-	}
+		for (var i = 1; i < 5; i++ )
+        {
+            q.Take = 200;
+            q.Skip = 200 * i;
+            q.SearchText = SpawnMenu.Current.SearchQuery;
+
+            var found2 = await q.RunAsync( default );
+            Canvas.AddItems( found2 );
+        }
+
+        // TODO - auto add more items here
+    }
 
 	public void RefreshItems()
 	{
