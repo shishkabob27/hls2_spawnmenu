@@ -27,6 +27,8 @@ namespace SpawnMenuAddon
         public TabContainer EntitySelector { get; set; }
         public TabContainer NPCSelector { get; set; }
         public TabContainer CloudSelector { get; set; }
+        public TabContainer TypeSelector { get; set; }
+        public bool ShowIncompatible { get; set; }
         public SpawnMenu()
         {
             Current = this;

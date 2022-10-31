@@ -1,4 +1,6 @@
-﻿namespace SpawnMenuAddon;
+﻿using Sandbox;
+
+namespace SpawnMenuAddon;
 
 [Library]
 public partial class CloudModelList : Panel
@@ -11,15 +13,15 @@ public partial class CloudModelList : Panel
         AddChild(out Canvas, "canvas");
 
         Canvas.Layout.AutoColumns = true;
-        Canvas.Layout.ItemWidth = 86;
-        Canvas.Layout.ItemHeight = 86;
+        Canvas.Layout.ItemWidth = 91;
+        Canvas.Layout.ItemHeight = 91;
 
         Canvas.OnCreateCell = (cell, data) =>
         {
             var file = (Package)data;
             var btn = cell.Add.Button(file.Title);
             btn.AddClass("icon");
-            btn.AddEventListener("onclick", () => ConsoleSystem.Run("spawn", file.FullIdent));
+            btn.AddEventListener("onclick", () => ConsoleSystem.Run( "spawnmenu_spawn", file.FullIdent, SpawnMenu.Current.TypeSelector.ActiveTab) );
             btn.Style.BackgroundImage = Texture.Load(file.Thumb);
         };
 
@@ -27,19 +29,42 @@ public partial class CloudModelList : Panel
     }
 	string prevSearch = "";
     string prevtab;
+    bool prevshowincomp;
     public override void Tick()
-	{
-		if ( prevSearch == SpawnMenu.Current.SearchQuery && prevtab == SpawnMenu.Current.SelectedTab ) return;
+    {
+        if ( SpawnMenu.Current.MainSelector.ActiveTab != "assetparty" ) return;
+        if ( prevSearch == SpawnMenu.Current.SearchQuery && prevtab == SpawnMenu.Current.SelectedTab && prevshowincomp == SpawnMenu.Current.ShowIncompatible ) return;
 		prevSearch = SpawnMenu.Current.SearchQuery;
 		prevtab = SpawnMenu.Current.SelectedTab;
-
+		prevshowincomp = SpawnMenu.Current.ShowIncompatible;
         RefreshItems();
 	} 
 	public async Task UpdateItems( int offset = 0 )
 	{
 		var q = new Package.Query();
 		q.Type = Package.Type.Model;
-		q.Order = Package.Order.Newest;
+
+        if ( SpawnMenu.Current.MainSelector.ActiveTab != "assetparty" ) return;
+        switch ( SpawnMenu.Current.TypeSelector.ActiveTab )
+        {
+            case "model":
+                q.Type = Package.Type.Model;
+                break;
+            case "addon":
+                q.Type = Package.Type.Addon;
+                break;
+            case "material":
+                q.Type = Package.Type.Material;
+                break;
+            case "map":
+                q.Type = Package.Type.Map;
+                break;
+            case "sound":
+                q.Type = Package.Type.Sound;
+                break;
+        }
+
+        q.Order = Package.Order.Newest;
 		switch(prevtab)
 		{
 			case "Most Recent":
@@ -60,7 +85,13 @@ public partial class CloudModelList : Panel
 		q.SearchText = SpawnMenu.Current.SearchQuery;
 
 		var found = await q.RunAsync( default );
-		Canvas.SetItems( found );
+		var foundNew = found.ToList();
+		if ( SpawnMenu.Current.TypeSelector.ActiveTab == "addon" && !SpawnMenu.Current.ShowIncompatible)
+		{
+            foundNew.RemoveAll( x => x.GetMeta<string>( "ParentPackage" ) != Global.GameIdent );
+
+        }
+		Canvas.SetItems( foundNew );
 
 		for (var i = 1; i < 5; i++ )
         {
@@ -69,7 +100,13 @@ public partial class CloudModelList : Panel
             q.SearchText = SpawnMenu.Current.SearchQuery;
 
             var found2 = await q.RunAsync( default );
-            Canvas.AddItems( found2 );
+            var foundNew2 = found2.ToList();
+            if ( SpawnMenu.Current.TypeSelector.ActiveTab == "addon" && !SpawnMenu.Current.ShowIncompatible )
+            {
+                foundNew2.RemoveAll( x => x.GetMeta<string>( "ParentPackage" ) != Global.GameIdent );
+
+            }
+            Canvas.AddItems( foundNew2.ToArray() );
         }
 
         // TODO - auto add more items here
@@ -100,22 +137,105 @@ public partial class CloudModelList : Panel
 		await package.MountAsync();
 
 		return model;
-	}
+	} 
+	static async Task<string> SpawnPackageSound( string packageName, Vector3 pos, Rotation rotation, Entity source )
+	{
+		var package = await Package.Fetch( packageName, false );
+		if ( package == null || package.PackageType != Package.Type.Sound || package.Revision == null )
+		{
+			// spawn error particles
+			return null;
+		}
 
-	[ConCmd.Server( "spawn" )]
-	public static async Task Spawn( string modelname )
+		if ( !source.IsValid ) return null; // source entity died or disconnected or something
+
+		var asset = package.GetMeta( "PrimaryAsset", "sounds/dev/error.sound" );
+
+		// downloads if not downloads, mounts if not mounted
+		await package.MountAsync();   
+        Log.Info( $"Playing sound {asset}" ); 
+        Sound.FromEntity( asset, source );
+        return asset;
+
+    }	
+
+	static async Task<string> SpawnPackageAddon( string packageName, Entity source )
+	{
+		var package = await Package.Fetch( packageName, false );
+		if ( package == null || package.PackageType != Package.Type.Addon || package.Revision == null )
+		{
+			// spawn error particles
+			return null;
+		}
+
+		if ( !source.IsValid ) return null; // source entity died or disconnected or something
+
+		var asset = package.GetMeta( "PrimaryAsset", "sounds/dev/error.sound" );
+
+		// downloads if not downloads, mounts if not mounted
+		await package.MountAsync();   
+		
+        Log.Info( $"Loading addon {asset}" );  
+        return asset;
+
+    }	static async Task<string> SpawnPackageGeneric( string packageName, Entity source )
+	{
+		var package = await Package.Fetch( packageName, false );
+		if ( package == null || package.PackageType != Package.Type.Addon || package.Revision == null )
+		{
+			// spawn error particles
+			return null;
+		}
+
+		if ( !source.IsValid ) return null; // source entity died or disconnected or something
+
+		var asset = package.GetMeta( "PrimaryAsset", "sounds/dev/error" );
+
+		// downloads if not downloads, mounts if not mounted
+		await package.MountAsync();   
+		
+        Log.Info( $"Loading package {asset}" );  
+        return asset;
+
+    }
+
+	[ConCmd.Server( "spawnmenu_spawn" )]
+	public static void Spawn( string ident , string activetab )
 	{
 		var owner = ConsoleSystem.Caller?.Pawn;
-
+		Log.Info( ident ); 
 		if ( ConsoleSystem.Caller == null )
 			return;
+        switch ( activetab )
+        {
+            case "model":
+				SpawnModel( ident, owner );
+                break;
+            case "addon":
+                SpawnPackageAddon( ident, owner );
+                break;
+            case "material":
+                SpawnPackageGeneric( ident, owner );
+                break;
+            case "map":
+				Global.ChangeLevel( ident );
+                break;
+			case "sound":
+                SpawnPackageSound( ident, Vector3.Zero, Rotation.From( Angles.Zero ), owner );
+                break;
+			default:
+                SpawnModel( ident, owner );
+                break;
+        }
+    }
+	static async void SpawnModel( string modelname, Entity owner ) {
 
-		var tr = Trace.Ray( owner.EyePosition, owner.EyePosition + owner.EyeRotation.Forward * 500 )
-			.UseHitboxes()
-			.Ignore( owner )
-			.Run();
+        var tr = Trace.Ray( owner.EyePosition, owner.EyePosition + owner.EyeRotation.Forward * 500 )
+            .UseHitboxes()
+            .Ignore( owner )
+            .Run();
 
-		var modelRotation = Rotation.From( new Angles( 0, owner.EyeRotation.Angles().yaw, 0 ) ) * Rotation.FromAxis( Vector3.Up, 180 );
+        var modelRotation = Rotation.From( new Angles( 0, owner.EyeRotation.Angles().yaw, 0 ) ) * Rotation.FromAxis( Vector3.Up, 180 );
 
 		//
 		// Does this look like a package?

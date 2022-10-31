@@ -48,14 +48,21 @@
         <tab tabName="assetparty" slot="tab" tabtext="Asset.Party">
             <div class="selectors">
                 <textentry style="width:116px;" placeholder="Search" class="search" @ref="SearchBar"></textentry>
-                <tabcontrol class="selector" @ref="CloudSelector">
-                    <tab slot="tab" tabName="popular" tabtext="Most Recent"></tab>
-                    <tab slot="tab" tabName="popular" tabtext="Trending"></tab>
+                <tabcontrol style="width:116px;" class="selector" @ref="CloudSelector">
+                    <tab slot="tab" tabName="recent" tabtext="Most Recent"></tab>
+                    <tab slot="tab" tabName="trend" tabtext="Trending"></tab>
                     <tab slot="tab" tabName="popular" tabtext="Most Popular"></tab>
-                    <tab slot="tab" tabName="popular" tabtext="Most Downloads"></tab>
+                    <tab slot="tab" tabName="download" tabtext="Most Downloads"></tab>
                 </tabcontrol>
             </div>
-            <CloudModelList></CloudModelList>
+
+            <tabcontrol @ref="TypeSelector">
+                <tab slot="tab" tabName="model" tabtext="Models"><CloudModelList></CloudModelList></tab>
+                <tab slot="tab" tabName="addon" tabtext="Addons" style=" flex-direction:column;"><check @checked="ShowIncompatible">Show Incompatible Addons</check><CloudModelList style="flex-grow:1;"></CloudModelList></tab>
+                <tab slot="tab" tabName="material" tabtext="Materials"><CloudModelList></CloudModelList></tab>
+                <tab slot="tab" tabName="map" tabtext="Maps"><CloudModelList></CloudModelList></tab>
+                <tab slot="tab" tabName="sound" tabtext="Sounds"><CloudModelList></CloudModelList></tab>
+            </tabcontrol>
         </tab>
     </tabcontrol>
     <div style="margin: 4px; justify-content: flex-end;">
