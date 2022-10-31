@@ -10,19 +10,21 @@
 
     <tabcontrol @ref="MainSelector">
         <tab tabName="models" slot="tab" tabtext="Models">
-            <div class="selectors">
-                <label class="title">HALF-LIFE</label>
-                <div class="span"></div>
+            <div class="selectors"> 
                 <tabcontrol class="selector" @ref="ModelSelector">
+                    <tab slot="tab" class="title" tabName="hl" tabtext="<&TT>HALF-LIFE"></tab>
+                    <tab slot="tab" class="title" tabName="hl" tabtext="<&SP>H"></tab>
                     <tab slot="tab" tabName="props" tabtext="Props"></tab>
                     <tab slot="tab" tabName="ragdolls" tabtext="Ragdoll"></tab>
+                    <tab slot="tab" class="title" tabName="hl" tabtext="<&TT>ADDONS"></tab>
+                    <tab slot="tab" class="title" tabName="hl" tabtext="<&SP>H"></tab>
+                    <tab slot="tab" tabName="addonmdl" tabtext="Models"></tab>
                 </tabcontrol>
             </div>
+            <ModelList></ModelList>
         </tab>
         <tab tabName="weapons" slot="tab" tabtext="Weapons">
             <div class="selectors">
-                <label class="title">HALF-LIFE</label>
-                <div class="span"></div>
                 <tabcontrol class="selector" @ref="WeaponSelector">
                 </tabcontrol>
             </div>
@@ -30,8 +32,6 @@
         </tab>
         <tab tabName="entities" slot="tab" tabtext="Entities">
             <div class="selectors">
-                <label class="title">HALF-LIFE</label>
-                <div class="span"></div>
                 <tabcontrol class="selector" @ref="EntitySelector">
                 </tabcontrol>
             </div>
@@ -39,8 +39,6 @@
         </tab>
         <tab tabName="npcs" slot="tab" tabtext="NPCs">
             <div class="selectors">
-                <label class="title">HALF-LIFE</label>
-                <div class="span"></div>
                 <tabcontrol class="selector" @ref="NPCSelector">
                 </tabcontrol>
             </div>
@@ -48,6 +46,15 @@
             <NPCList></NPCList>
         </tab>
         <tab tabName="assetparty" slot="tab" tabtext="Asset.Party">
+            <div class="selectors">
+                <textentry style="width:116px;" placeholder="Search"></textentry>
+                <tabcontrol class="selector" @ref="CloudSelector">
+                    <tab slot="tab" tabName="popular" tabtext="Most Recent"></tab>
+                    <tab slot="tab" tabName="popular" tabtext="Trending"></tab>
+                    <tab slot="tab" tabName="popular" tabtext="Most Popular"></tab>
+                    <tab slot="tab" tabName="popular" tabtext="Most Downloads"></tab>
+                </tabcontrol>
+            </div>
             <CloudModelList></CloudModelList>
         </tab>
     </tabcontrol>

@@ -11,8 +11,8 @@ public partial class CloudModelList : Panel
         AddChild(out Canvas, "canvas");
 
         Canvas.Layout.AutoColumns = true;
-        Canvas.Layout.ItemWidth = 96;
-        Canvas.Layout.ItemHeight = 96;
+        Canvas.Layout.ItemWidth = 86;
+        Canvas.Layout.ItemHeight = 86;
 
         Canvas.OnCreateCell = (cell, data) =>
         {

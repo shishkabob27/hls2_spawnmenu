@@ -62,8 +62,22 @@ namespace SpawnMenuAddon
                     SelectedTab = "";
                     break;
             }
+            var ttabs = CurrentTab.Tabs.Where( x => x.Button.Text.StartsWith( "<&TT>" ) );
+            foreach (Tab t in ttabs)
+            {
+                t.Button.Text = t.Button.Text.Remove( 0, 5 );
+                t.Button.SetClass( "title", true );
+                t.Button.SetClass( "noSort", true );
+            }
+            var sptabs = CurrentTab.Tabs.Where( x => x.Button.Text.StartsWith( "<&SP>" ) );
+            foreach (Tab t in sptabs)
+            {
+                t.Button.Text = t.Button.Text.Remove( 0, 5 );
+                t.Button.SetClass( "span", true );
+                t.Button.SetClass( "noSort", true );
+            }
             base.Tick();
-            Current.CurrentTab.Children.First().SortChildren<Button>( x => x.Text.First() ); 
+            Current.CurrentTab.Children.First().SortChildren<Button>( x => (x.Classes.Contains("noSort")) ? x.Text.First() : x.SiblingIndex ); 
             Drag();
             SetClass( "active", MenuOpen );
             if ( MenuOpen )
