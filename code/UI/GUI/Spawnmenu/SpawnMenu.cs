@@ -77,7 +77,7 @@ namespace SpawnMenuAddon
                 t.Button.SetClass( "noSort", true );
             }
             base.Tick();
-            Current.CurrentTab.Children.First().SortChildren<Button>( x => (x.Classes.Contains("noSort")) ? x.Text.First() : x.SiblingIndex ); 
+            if (MainSelector.ActiveTab != "models") Current.CurrentTab.Children.First().SortChildren<Button>( x => (x.Classes.Contains("noSort")) ? x.SiblingIndex : x.Text.First() ); 
             Drag();
             SetClass( "active", MenuOpen );
             if ( MenuOpen )
