@@ -7,6 +7,7 @@ global using Sandbox.UI.Tests;
 global using Sandbox.UI.Construct;
 using System;
 using static Sandbox.UI.TabContainer;
+using SandboxEditor;
 
 namespace SpawnMenuAddon
 {
@@ -117,7 +118,34 @@ namespace SpawnMenuAddon
             b.EnableDrawing = false;
             b.EnableAllCollisions = false;
             b.Transmit = TransmitType.Never;
+
+
+            try
+            {
+                var c = "materials/" + type.GetAttribute<EditorSpriteAttribute>().Sprite;
+                var a = Texture.Load( c );
+                //Log.Info( a.ResourcePath );
+                //Log.Info( c );
+                //var d = a;
+                return a;
+            }
+            catch { }
+
             if ( b.Model == null ) return default;
+            var mdl = b.Model;
+
+            try
+            {
+                var a = Model.Load((string)type.GetAttribute<EditorModelAttribute>().Model);
+                if ( a == null || a.IsError || a.IsPromise || a.IsError || a.ResourcePath == "models/dev/error.vmdl" )
+                {
+                    //mdl = b.Model;
+                } else
+                {
+                    mdl = a;
+                }
+            }
+            catch { mdl = b.Model; }
             var txt = Texture.CreateRenderTarget().WithHeight( ImgHeight ).WithWidth( ImgWidth );
             var txt2 = txt.Create();
             var scn = new SceneCamera();
@@ -125,10 +153,10 @@ namespace SpawnMenuAddon
             scn.World = new SceneWorld();
             scn.FieldOfView = 10;
             var trn = new Transform( new Vector3( 0, 0, 0 ), Rotation.From( 0, 0, 0 ) );
-            var boundmax = b.Model.Bounds.Size.Length;
+            var boundmax = mdl.Bounds.Size.Length;
             var dist = ( boundmax / ImgScalar ) / MathF.Tan( MathX.DegreeToRadian( scn.FieldOfView ) / 2 );//8 * MathF.Sqrt(b.Model.Bounds.Size.Length);
                                                                                                            // Ideal distance  our camera should be to fit our object full on screen
-            var scnobj = new SceneObject( scn.World, b.Model, trn );
+            var scnobj = new SceneObject( scn.World, mdl, trn );
             var box = ( scnobj.Bounds.Mins + scnobj.Bounds.Maxs ) / 2;
             scn.Position = new Vector3( 1, 1, 0.9f ) * dist;
             scn.Rotation = Rotation.LookAt( -1 * ( scn.Position - box ).Normal );//Rotation.From(30,0,0);
