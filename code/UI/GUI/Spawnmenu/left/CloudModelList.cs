@@ -154,6 +154,24 @@ public partial class CloudModelList : Panel
         Sound.FromEntity( asset, source );
         return asset;
 
+    }		
+	static async Task<string> SpawnPackageMaterial( string packageName, Entity source )
+	{
+		var package = await Package.Fetch( packageName, false );
+		if ( package == null || package.PackageType != Package.Type.Material || package.Revision == null )
+		{
+			// spawn error particles
+			return null;
+		}
+
+		if ( !source.IsValid ) return null; // source entity died or disconnected or something
+
+		var asset = package.GetMeta( "PrimaryAsset", "materials/dev/error.vmat" );
+
+		// downloads if not downloads, mounts if not mounted
+		await package.MountAsync();   
+        return asset;
+
     }	
 
 	static async Task<string> SpawnPackageAddon( string packageName, Entity source )
@@ -213,7 +231,7 @@ public partial class CloudModelList : Panel
                 SpawnPackageAddon( ident, owner );
                 break;
             case "material":
-                SpawnPackageGeneric( ident, owner );
+                SetMaterial( ident, owner );
                 break;
             case "map":
 				Global.ChangeLevel( ident );
@@ -263,6 +281,34 @@ public partial class CloudModelList : Panel
 		if ( !ent.PhysicsBody.IsValid() )
 		{
 			ent.SetupPhysicsFromOBB( PhysicsMotionType.Dynamic, ent.CollisionBounds.Mins, ent.CollisionBounds.Maxs );
+		}
+	}
+	static async void SetMaterial( string matname, Entity owner ) {
+
+        var tr = Trace.Ray( owner.EyePosition, owner.EyePosition + owner.EyeRotation.Forward * 500 )
+            .UseHitboxes()
+            .Ignore( owner )
+            .Run();
+
+		//
+		// Does this look like a package?
+		//
+		if ( matname.Count( x => x == '.' ) == 1 && !matname.EndsWith( ".vmat", System.StringComparison.OrdinalIgnoreCase ) && !matname.EndsWith( ".vmat_c", System.StringComparison.OrdinalIgnoreCase ) )
+		{
+            matname = await SpawnPackageMaterial( matname, owner );
+			if ( matname == null )
+				return;
+		}
+
+        Log.Info( $"Setting material {matname}" );
+
+        var material = Material.Load( matname );
+		//if ( material == null || material.IsPromise )
+			//return;
+
+		if (tr.Entity is ModelEntity mdlent)
+		{
+			mdlent.SetMaterialOverride( material );
 		}
 	}
 }
