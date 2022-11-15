@@ -87,7 +87,7 @@ public partial class CloudModelList : Panel
 		var foundNew = found.ToList();
 		if ( SpawnMenu.Current.TypeSelector.ActiveTab == "addon" && !SpawnMenu.Current.ShowIncompatible)
         {
-			foundNew.RemoveAll( x => !( x.GetMeta<string>( "ParentPackage" ) == "shishkabob.hls2" || x.Tags.Contains("game:any") ) ) ; 
+			foundNew.RemoveAll( x => !( x.GetMeta<string>( "ParentPackage" ) == "shishkabob.hls2" || x.Tags.Contains("game:any") || x.Tags.Contains( "game:shishkabob.hls2" ) ) ) ; 
         }
 		Canvas.SetItems( foundNew );
 
@@ -101,7 +101,7 @@ public partial class CloudModelList : Panel
             var foundNew2 = found2.ToList();
             if ( SpawnMenu.Current.TypeSelector.ActiveTab == "addon" && !SpawnMenu.Current.ShowIncompatible )
             {
-                foundNew2.RemoveAll( x => !( x.GetMeta<string>( "ParentPackage" ) == "shishkabob.hls2" || x.Tags.Contains( "game:any" ) ) );
+                foundNew2.RemoveAll( x => !( x.GetMeta<string>( "ParentPackage" ) == "shishkabob.hls2" || x.Tags.Contains( "game:any" ) || x.Tags.Contains( "game:shishkabob.hls2" ) ) );
             }
             Canvas.AddItems( foundNew2.ToArray() );
         }
@@ -185,10 +185,10 @@ public partial class CloudModelList : Panel
 
 		if ( !source.IsValid ) return null; // source entity died or disconnected or something
 
-		var asset = package.GetMeta( "PrimaryAsset", "sounds/dev/error.sound" );
+		var asset = package.GetMeta( "PrimaryType", "ErrorType" );
 
 		// downloads if not downloads, mounts if not mounted
-		await package.MountAsync();   
+		await package.MountAsync();
 		
         Log.Info( $"Loading addon {asset}" );  
         return asset;
