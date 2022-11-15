@@ -186,11 +186,12 @@ public partial class CloudModelList : Panel
 		if ( !source.IsValid ) return null; // source entity died or disconnected or something
 
 		var asset = package.GetMeta( "PrimaryType", "ErrorType" );
+		var parentpkg = package.GetMeta( "ParentPackage", "all games." );
 
 		// downloads if not downloads, mounts if not mounted
-		await package.MountAsync();
+		await package.MountAsync(true);
 		
-        Log.Info( $"Loading addon {asset}" );  
+        Log.Info( $"Loading addon \"{packageName}\" for \"{parentpkg}\" with primary type \"{asset}\"" );  
         return asset;
 
     }	
@@ -228,7 +229,7 @@ public partial class CloudModelList : Panel
 				SpawnModel( ident, owner );
                 break;
             case "addon":
-                SpawnPackageAddon( ident, owner );
+                DownloadAddon( ident, owner );
                 break;
             case "material":
                 SetMaterial( ident, owner );
@@ -243,6 +244,9 @@ public partial class CloudModelList : Panel
                 SpawnModel( ident, owner );
                 break;
         }
+    }
+	static async void DownloadAddon( string ident, Entity owner ) {
+		var modelname = await SpawnPackageAddon( ident, owner );
     }
 	static async void SpawnModel( string modelname, Entity owner ) {
 
