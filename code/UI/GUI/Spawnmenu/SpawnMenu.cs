@@ -1,10 +1,19 @@
-﻿global using Editor;
+﻿global using static Sandbox.Internal.GlobalGameNamespace;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Text.Json;
+global using System.Threading.Tasks;
+global using Sandbox.Component;
+global using Sandbox.Diagnostics;
+
+global using Editor;
 global using Sandbox;
 global using Sandbox.UI;
 global using Sandbox.UI.Construct;
 global using System;
 global using System.Linq;
 global using System.Threading.Tasks;
+global using System.Collections.Generic;
 global using XeNPC;
 using static Sandbox.UI.TabContainer;
 
