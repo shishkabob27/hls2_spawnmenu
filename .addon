@@ -13,7 +13,7 @@
   ],
   "HasCode": true,
   "CodePath": "/code/",
-  "RootNamespace": null,
+  "PackageReferences": [],
   "Metadata": {
     "ParentPackage": "shishkabob.hls2",
     "Compiler": {
@@ -25,6 +25,7 @@
     "RenderMins": "0,0,0",
     "PhysicsMaxs": "0,0,0",
     "PhysicsMins": "0,0,0",
-    "PrimaryAsset": ""
+    "PrimaryAsset": "",
+    "CsProjName": ""
   }
 }
