@@ -63,28 +63,30 @@ public partial class CloudModelList : Panel
 		}
 
 
-		var Order = "order:newest";
+		var Order = "sort:newest";
 		switch (prevtab)
 		{
 			case "Most Recent":
-				Order = "order:newest";
+				Order = "sort:newest";
 				break;
 			case "Most Popular":
-				Order = "order:popular";
+				Order = "sort:popular";
 				break;
 			case "Most Downloads":
-				Order = "order:live";
+				Order = "sort:live";
 				break;
 			case "Trending":
-				Order = "order:trending";
+				Order = "sort:trending";
 				break;
 		}
 		var Take = 200;
 		var Skip = offset;
-		var Search = "search:" + SpawnMenu.Current.SearchQuery;
+		var Search = SpawnMenu.Current.SearchQuery;
 
 		var found = await Package.FindAsync($"{Order} {Type} {Search}", Take, Skip);
 		var foundNew = found.Packages.ToList();
+		Log.Info($"{Order} {Type} {Search}");
+		Log.Info(foundNew.Count);
 		if (SpawnMenu.Current.TypeSelector.ActiveTab == "addon" && !SpawnMenu.Current.ShowIncompatible)
 		{
 			foundNew.RemoveAll(x => !(x.GetMeta<string>("ParentPackage") == "shishkabob.hls2" || x.Tags.Contains("game:any") || x.Tags.Contains("game:shishkabob.hls2")));
@@ -95,7 +97,7 @@ public partial class CloudModelList : Panel
 		{
 			Take = 200;
 			Skip = 200 * i;
-			Search = "search:" + SpawnMenu.Current.SearchQuery;
+			Search = SpawnMenu.Current.SearchQuery;
 
 			var found2 = await Package.FindAsync($"{Order} {Type} {Search}", Take, Skip);
 			var foundNew2 = found2.Packages.ToList();
