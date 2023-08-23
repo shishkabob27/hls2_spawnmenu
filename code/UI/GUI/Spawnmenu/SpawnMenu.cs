@@ -1,19 +1,11 @@
-﻿global using static Sandbox.Internal.GlobalGameNamespace;
-global using System.Collections.Generic;
-global using System.Linq;
-global using System.Text.Json;
+﻿global using System.Linq;
 global using System.Threading.Tasks;
-global using Sandbox.Component;
-global using Sandbox.Diagnostics;
 
 global using Editor;
 global using Sandbox;
 global using Sandbox.UI;
 global using Sandbox.UI.Construct;
 global using System;
-global using System.Linq;
-global using System.Threading.Tasks;
-global using System.Collections.Generic;
 global using XeNPC;
 using static Sandbox.UI.TabContainer;
 
@@ -30,7 +22,7 @@ namespace SpawnMenuAddon
 		public TabContainer CurrentTab;
 		public TextEntry SearchBar { get; set; }
 		public TabContainer MainSelector { get; set; }
-		public TabContainer ModelSelector { get; set; }
+		//public TabContainer ModelSelector { get; set; }
 		public TabContainer WeaponSelector { get; set; }
 		public TabContainer EntitySelector { get; set; }
 		public TabContainer NPCSelector { get; set; }
@@ -54,10 +46,10 @@ namespace SpawnMenuAddon
 			SelectedTab = "";
 			switch (MainSelector.ActiveTab)
 			{
-				case "models":
-					try { SelectedTab = ModelSelector.Tabs.Where(x => x.Active).First().Button.Text; } catch { }
-					CurrentTab = ModelSelector;
-					break;
+				//case "models":
+				//	try { SelectedTab = ModelSelector.Tabs.Where(x => x.Active).First().Button.Text; } catch { }
+				//	CurrentTab = ModelSelector;
+				//	break;
 				case "weapons":
 					try { SelectedTab = WeaponSelector.Tabs.Where(x => x.Active).First().Button.Text; } catch { }
 					CurrentTab = WeaponSelector;
@@ -76,7 +68,7 @@ namespace SpawnMenuAddon
 					SearchQuery = SearchBar.Text;
 					break;
 				default:
-					CurrentTab = ModelSelector;
+					CurrentTab = WeaponSelector;
 					SelectedTab = "";
 					break;
 			}
@@ -110,10 +102,10 @@ namespace SpawnMenuAddon
 			//            SelectedTab =
 		}
 
-		[Event.Client.BuildInput]
+		[GameEvent.Client.BuildInput]
 		public void ProcessClientInput()
 		{
-			if (Input.Pressed(InputButton.Grenade))
+			if (Input.Pressed("Grenade"))
 			{
 				Style.Left = (Screen.Width / 2) - (Box.Rect.Width / 2);
 				Style.Top = (Screen.Height / 2) - (Box.Rect.Height / 2);
@@ -210,10 +202,10 @@ partial class GAMER
 {
 	static SMhudpanel sphudpanel { get; set; }
 
-	[Event.Client.BuildInput]
+	[GameEvent.Client.BuildInput]
 	public static void InputB()
 	{
-		if (Input.Pressed(InputButton.Grenade))
+		if (Input.Pressed("Menu"))
 		{
 			ConsoleSystem.Run("openspawnmenu");
 		}

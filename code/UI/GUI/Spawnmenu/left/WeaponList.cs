@@ -42,7 +42,7 @@ public partial class WeaponList : Panel
 	}
 	string[] HL1Weapons = new string[] { "weapon_crowbar", "weapon_9mmhandgun", "weapon_357", "weapon_mp5", "weapon_shotgun", "weapon_crossbow", "weapon_rpg", "weapon_gauss", "weapon_egon", "weapon_hornet", "weapon_handgrenade", "weapon_tripmine", "weapon_satchel", "weapon_snark" };
 	string prevtab;
-	[Event.Tick]
+	[GameEvent.Tick]
 	void update()
 	{
 		if (prevtab == SpawnMenu.Current.SelectedTab) return;

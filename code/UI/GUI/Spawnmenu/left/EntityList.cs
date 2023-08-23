@@ -42,7 +42,7 @@ public partial class EntityList : Panel
 	}
 
 	string prevtab;
-	[Event.Tick.Client]
+	[GameEvent.Tick.Client]
 	void update()
 	{
 		if (prevtab == SpawnMenu.Current.SelectedTab) return;

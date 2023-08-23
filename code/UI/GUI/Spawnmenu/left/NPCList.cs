@@ -37,7 +37,7 @@ public partial class NPCList : Panel
 		};
 	}
 	string prevtab;
-	[Event.Tick]
+	[GameEvent.Tick]
 	void update()
 	{
 		if (prevtab == SpawnMenu.Current.SelectedTab) return;

@@ -7,16 +7,15 @@
   "Schema": 1,
   "HasAssets": true,
   "AssetsPath": "",
-  "ResourcePaths": [
-    "/ui/*",
-    "/resource/*"
-  ],
+  "Resources": null,
+  "MenuResources": null,
   "HasCode": true,
   "CodePath": "/code/",
   "PackageReferences": [
     "local.base",
     "shishkabob.hls2"
   ],
+  "EditorReferences": null,
   "Metadata": {
     "ParentPackage": "shishkabob.hls2",
     "Compiler": {
@@ -24,6 +23,9 @@
       "DefineConstants": "SANDBOX;ADDON;DEBUG",
       "NoWarn": "1701;1702;1591;",
       "References": [
+        "shishkabob.hls2"
+      ],
+      "DistinctReferences": [
         "shishkabob.hls2"
       ]
     },

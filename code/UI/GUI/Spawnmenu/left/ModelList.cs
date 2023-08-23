@@ -42,7 +42,7 @@ public partial class ModelList : Panel
 	}
 
 	string prevtab;
-	[Event.Tick.Client]
+	[GameEvent.Tick.Client]
 	void update()
 	{
 		if (prevtab == SpawnMenu.Current.SelectedTab) return;
@@ -50,6 +50,24 @@ public partial class ModelList : Panel
 		if (SpawnMenu.Current.MainSelector.ActiveTab != "models") return;
 
 		Canvas.Clear();
+
+		//get all models
+		var ents = TypeLibrary.GetTypes<ModelEntity>()
+									.OrderBy(x => x.Title)
+									.ToArray();
+		foreach ( var ent in ents )
+		{
+			string a = "Other";
+			try
+			{
+				a = ent.Title.Split("/")[0];
+			}
+			catch { }
+			if (a == SpawnMenu.Current.SelectedTab)
+			{
+				Canvas.AddItem(ent);
+			}
+		}
 
 	}
 
